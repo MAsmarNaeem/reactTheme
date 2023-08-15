@@ -13,8 +13,11 @@ const UserProfileModal = (props) => {
     address: '',
     city: '',
     state: '',
-    numberOfFloors:'',
-    view:''
+    numberOfFloors: '',
+    view: '',
+    numberofcars:'',
+    country:'',
+    postalcode:''
   })
   console.log('modal state is :', show)
 
@@ -41,8 +44,12 @@ const UserProfileModal = (props) => {
         address: propertyData.address,
         city: propertyData.city,
         state: propertyData.state,
-        numberOfFloors:propertyData.numberOfFloors,
-        view:propertyData.view
+        numberOfFloors: propertyData.numberOfFloors,
+        view: propertyData.view,
+        country:propertyData.country,
+        postalcode:propertyData.postalcode,
+        numberofcars:propertyData.numberofcars,
+        country:propertyData.country
       })
     } catch (error) {
       console.error('Error fetching user data:', error)
@@ -61,7 +68,7 @@ const UserProfileModal = (props) => {
   const updateUserProfile = () => {
     //setShowAlert(true);
     setShowSpinner(true)
-    const { title, totalPrice, address, city, state,numberOfFloors } = propertyData
+    const { title, totalPrice, address, city, state, numberOfFloors } = propertyData
     console.log('title is :', title)
     axios
       .post(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
@@ -70,7 +77,7 @@ const UserProfileModal = (props) => {
         address: address,
         city: city,
         state: state,
-        numberOfFloors:numberOfFloors
+        numberOfFloors: numberOfFloors,
       })
       .then((response) => {
         console.log('response is :', response)
@@ -193,8 +200,34 @@ const UserProfileModal = (props) => {
                 value={propertyData.view}
                 onChange={handleInputChange}
               />
+              <Form.Label>Number of Cars</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="number of cars"
+                autoFocus
+                name="numberofcars"
+                value={propertyData.numberofcars}
+                onChange={handleInputChange}
+              />
+                <Form.Label>Country</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Country"
+                autoFocus
+                name="country"
+                value={propertyData.country}
+                onChange={handleInputChange}
+              />
+                <Form.Label>postal code</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="postal code"
+                autoFocus
+                name="postalcode"
+                value={propertyData.postalcode}
+                onChange={handleInputChange}
+              />
             </Form>
-            
             
           </Modal.Body>
           <Modal.Footer>
