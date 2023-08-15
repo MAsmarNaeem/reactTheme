@@ -7,11 +7,14 @@ const UserProfileModal = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [propertyData, setPropertyData] = useState({
+    type: '',
     title: '',
     totalPrice: '',
     address: '',
     city: '',
     state: '',
+    numberOfFloors:'',
+    view:''
   })
   console.log('modal state is :', show)
 
@@ -34,10 +37,12 @@ const UserProfileModal = (props) => {
 
       setPropertyData({
         title: propertyData.title,
-        totalPrice:propertyData.totalPrice,
+        totalPrice: propertyData.totalPrice,
         address: propertyData.address,
         city: propertyData.city,
         state: propertyData.state,
+        numberOfFloors:propertyData.numberOfFloors,
+        view:propertyData.view
       })
     } catch (error) {
       console.error('Error fetching user data:', error)
@@ -56,18 +61,19 @@ const UserProfileModal = (props) => {
   const updateUserProfile = () => {
     //setShowAlert(true);
     setShowSpinner(true)
-    const { title, totalPrice,address,city, state } = propertyData
-    console.log("title is :",title);
+    const { title, totalPrice, address, city, state,numberOfFloors } = propertyData
+    console.log('title is :', title)
     axios
-      .put(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
+      .post(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
         title: title,
         totalPrice: totalPrice,
         address: address,
         city: city,
         state: state,
+        numberOfFloors:numberOfFloors
       })
       .then((response) => {
-        console.log("response is :",response);
+        console.log('response is :', response)
         // console.log("name is :", response.data.firstName);
         // console.log("last is :", response.data.lastName);
         // console.log("age is :", response.data.age);
@@ -76,15 +82,15 @@ const UserProfileModal = (props) => {
 
         if (response.status === 200) {
           setTimeout(() => {
-            setShowSpinner(false);
+            setShowSpinner(false)
             setShowAlert(true)
-          }, 300);
+          }, 300)
         }
       })
       .catch((error) => {
-        console.error("Error updating user profile:", error);
-        setShowSpinner(false);
-      });
+        console.error('Error updating user profile:', error)
+        setShowSpinner(false)
+      })
   }
 
   return (
@@ -106,7 +112,16 @@ const UserProfileModal = (props) => {
           )}
           <Modal.Body>
             <Form>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Group className="" controlId="exampleForm.ControlInput1">
+                <Form.Label>Property Type</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Property type"
+                  autoFocus
+                  name="type"
+                  value={propertyData.type}
+                  onChange={handleInputChange}
+                />
                 <Form.Label>Title</Form.Label>
                 <Form.Control
                   type="text"
@@ -117,7 +132,7 @@ const UserProfileModal = (props) => {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Group className="" controlId="exampleForm.ControlInput1">
                 <Form.Label>Total Value</Form.Label>
                 <Form.Control
                   type="text"
@@ -128,7 +143,7 @@ const UserProfileModal = (props) => {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+              <Form.Group className="" controlId="exampleForm.ControlInput2">
                 <Form.Label>Address</Form.Label>
                 <Form.Control
                   type="address"
@@ -139,7 +154,7 @@ const UserProfileModal = (props) => {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+              <Form.Group className="" controlId="exampleForm.ControlInput2">
                 <Form.Label>City</Form.Label>
                 <Form.Control
                   type="text"
@@ -160,7 +175,27 @@ const UserProfileModal = (props) => {
                 value={propertyData.state}
                 onChange={handleInputChange}
               />
+              <Form.Label>Number of floors</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Number of Floors"
+                autoFocus
+                name="state"
+                value={propertyData.numberOfFloors}
+                onChange={handleInputChange}
+              />
+              <Form.Label>view</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="view"
+                autoFocus
+                name="view"
+                value={propertyData.view}
+                onChange={handleInputChange}
+              />
             </Form>
+            
+            
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
