@@ -4,6 +4,8 @@ import React from 'react'
 import { AppSidebar, AppFooter, AppHeader } from '../../../components/index'
 import List from '../../../components/propertyList/PropertyList'
 
+
+
 const PropertyList = () => {
   return (
     <div>

@@ -1,79 +1,79 @@
-import React, {  useState } from "react";
-import { Modal, Form, Button, Alert, Spinner } from "react-bootstrap";
-import axios from "axios";
-import Dropdown from "react-bootstrap/Dropdown";
+import React, { useState } from 'react'
+import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
+import axios from 'axios'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 const UserProfileModal = (props) => {
-  const [show, setShow] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [userData, setUserData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    age: "",
-    gender: "",
-  });
+  const [show, setShow] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
+  const [propertyData, setPropertyData] = useState({
+    title: '',
+    totalPrice: '',
+    address: '',
+    city: '',
+    state: '',
+  })
+  console.log('modal state is :', show)
 
-  const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false)
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => setShow(false)
   const handleShow = () => {
-    getUserData();
-    setShowAlert(false);
-    setShow(true);
-  };
+    getUserData()
+    setShowAlert(false)
+    setShow(true)
+  }
+  console.log('user data is is :', propertyData)
 
   const getUserData = async () => {
     try {
-     // console.log("id is :", props.id);
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/users/${props.id}`
-      );
-      const userData = response.data;
-      console.log(userData, "the");
+      //   const response = await axios.get(
+      //     `${process.env.REACT_APP_API_URL}v1/admin/properties`
+      //   );
+      //   const userData = 0;
 
-      setUserData({
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        age: userData.age,
-        gender: userData.gender,
-      });
+      setPropertyData({
+        title: propertyData.title,
+        totalPrice:propertyData.totalPrice,
+        address: propertyData.address,
+        city: propertyData.city,
+        state: propertyData.state,
+      })
     } catch (error) {
-
-      console.error("Error fetching user data:", error);
+      console.error('Error fetching user data:', error)
     }
-  };
+  }
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
 
-    setUserData((prevData) => ({
+    setPropertyData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const updateUserProfile = () => {
     //setShowAlert(true);
-    setShowSpinner(true);
-    const { email, firstName, lastName, age, gender } = userData;
+    setShowSpinner(true)
+    const { title, totalPrice,address,city, state } = propertyData
+    console.log("title is :",title);
     axios
-      .put(`${process.env.REACT_APP_API_URL}/users/${props.id}`, {
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        age: age,
-        gender: gender,
+      .put(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
+        title: title,
+        totalPrice: totalPrice,
+        address: address,
+        city: city,
+        state: state,
       })
       .then((response) => {
+        console.log("response is :",response);
         // console.log("name is :", response.data.firstName);
         // console.log("last is :", response.data.lastName);
         // console.log("age is :", response.data.age);
         // console.log("email is :", response.data.email);
         // console.log("user gender is :", response.data.gender);
 
-              
         if (response.status === 200) {
           setTimeout(() => {
             setShowSpinner(false);
@@ -85,17 +85,17 @@ const UserProfileModal = (props) => {
         console.error("Error updating user profile:", error);
         setShowSpinner(false);
       });
-  };
+  }
 
   return (
     <div>
       <>
         <Dropdown.Item className="cursor" onClick={handleShow}>
-          {props.name}
+          Add
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Profile</Modal.Title>
+            <Modal.Title>Add Property</Modal.Title>
           </Modal.Header>
           {showAlert && (
             <>
@@ -106,84 +106,60 @@ const UserProfileModal = (props) => {
           )}
           <Modal.Body>
             <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>First Name</Form.Label>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                <Form.Label>Title</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="First Name"
+                  placeholder="Title"
                   autoFocus
-                  name="firstName"
-                  value={userData.firstName}
+                  name="title"
+                  value={propertyData.title}
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Last Name</Form.Label>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                <Form.Label>Total Value</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="TotalPrice"
                   autoFocus
-                  name="lastName"
-                  value={userData.lastName}
+                  name="totalPrice"
+                  value={propertyData.value}
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput2"
-              >
-                <Form.Label>Email address</Form.Label>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+                <Form.Label>Address</Form.Label>
                 <Form.Control
-                  type="email"
-                  placeholder="name@example.com"
+                  type="address"
+                  placeholder="Address"
                   autoFocus
-                  name="email"
-                  value={userData.email}
+                  name="address"
+                  value={propertyData.address}
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput2"
-              >
-                <Form.Label>Age</Form.Label>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+                <Form.Label>City</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="20"
+                  type="text"
+                  placeholder="City"
                   autoFocus
-                  name="age"
-                  value={userData.age}
+                  name="city"
+                  value={propertyData.city}
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Label>Gender</Form.Label>
-              <br />
-              <Form.Check
-                type="radio"
-                aria-label="radio 1"
-                name="gender"
-                value="male"
-                checked={userData.gender === "male"}
+
+              <Form.Label>State</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="state"
+                autoFocus
+                name="state"
+                value={propertyData.state}
                 onChange={handleInputChange}
-                className="d-inline"
-              />{" "}
-              Male
-              <Form.Check
-                type="radio"
-                aria-label="radio 1"
-                name="gender"
-                value="female"
-                checked={userData.gender === "female"}
-                onChange={handleInputChange}
-                className="d-inline ms-3"
-              />{" "}
-              Female
+              />
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -191,7 +167,7 @@ const UserProfileModal = (props) => {
               Close
             </Button>
             <Button variant="primary" onClick={updateUserProfile}>
-              Save Changes
+              Save
               {showSpinner ? (
                 <Spinner
                   as="span"
@@ -199,7 +175,7 @@ const UserProfileModal = (props) => {
                   size="sm"
                   role="status"
                   aria-hidden="true"
-                  style={{ marginLeft: "5px" }}
+                  style={{ marginLeft: '5px' }}
                 />
               ) : null}
             </Button>
@@ -207,7 +183,7 @@ const UserProfileModal = (props) => {
         </Modal>
       </>
     </div>
-  );
-};
+  )
+}
 
-export default UserProfileModal;
+export default UserProfileModal

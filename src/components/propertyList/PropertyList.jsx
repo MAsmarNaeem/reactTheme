@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
+import Modal from "../../components/model/Modal"
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
   const get_users_list = () => {
@@ -29,8 +30,9 @@ const PropertyList = () => {
           <div className="card">
             <div className="card-header d-flex">
               <div>Property List</div>
-              <div className="d-flex text-center " style={{ paddingLeft: '1100px' }}>
-                <CButton color="dark">Add</CButton>
+              <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
+                <CButton color="dark"><Modal/></CButton>
+                
               </div>
             </div>
 
@@ -39,25 +41,40 @@ const PropertyList = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    {/* Add more column headers here */}
+                    <th>Title</th>
+                    <th>Total Value</th>
+                    <th>address</th>
+                    <th>city</th>
+                    <th>State</th>
+                    <th>Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Property 1</td>
-                    <td>Description 1</td>
-                    {/* Add more rows and data here */}
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Property 2</td>
-                    <td>Description 2</td>
-                  </tr>
-                  {/* Add more rows and data here */}
-                </tbody>
+            {usersList.map((user, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{user.title}</td>
+                <td>{user.total_value_of_property}</td>
+                <td>{user.address}</td>
+                <td>{user.city}</td>
+                <td>{user.state}</td>
+                <td>{user.gender}</td>
+                <td>{user.age}</td>
+
+                <td className="d-flex">
+                
+                 
+                  {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}
+                  {/* <div variant="none" onClick={() => deleteUser(user.id)}> */}
+                  
+                    {/* <AiFillDelete className="text-danger ms-3"  show="false" style={{cursor:"pointer"}}/>
+                    
+                  </div> */}
+                </td>
+              </tr>
+            ))}
+          </tbody>
               </table>
             </div>
           </div>
