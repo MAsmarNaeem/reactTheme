@@ -2,36 +2,31 @@ import React, { useState } from 'react'
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 
 const UserProfileModal = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
-  const[message,setMessage]=useState("")
-  const [propertyData, setPropertyData] = useState({
-    type: '',
-    title: '',
-    totalPrice: '',
-    address: '',
-    city: '',
-    state: '',
-    numberOfFloors: '',
-    view: '',
-    numberofcars: '',
-    country: '',
-    postalcode: '',
-  })
-  console.log('modal state is :', show)
-  const navigate=useNavigate()
+  const [message, setMessage] = useState('')
   const token=localStorage.getItem('token')
-
+  const [propertyData, setPropertyData] = useState({
+    property_title: '',
+    no_of_floor: '',
+    size_of_floor: '',
+    type: '',
+    estimated_value: '',
+    actual_value: '',
+    map: '',
+  })
+  console.log('modal state is :', propertyData)
+  const navigate=useNavigate()
   const [showSpinner, setShowSpinner] = useState(false)
 
   const handleClose = () => setShow(false)
   const handleShow = () => {
     if(!token)
     {
-      navigate('/login')
+        navigate('/login')
     }
     getUserData()
     setShowAlert(false)
@@ -41,22 +36,17 @@ const UserProfileModal = (props) => {
 
   const getUserData = async () => {
     try {
-
       setPropertyData({
-        title: propertyData.title,
-        totalPrice: propertyData.totalPrice,
-        address: propertyData.address,
-        city: propertyData.city,
-        state: propertyData.state,
-        numberOfFloors: propertyData.numberOfFloors,
-        view: propertyData.view,
+        property_title: propertyData.property_title,
+        no_of_floor: propertyData.no_of_floor,
+        size_of_floor: propertyData.size_of_floor,
         type: propertyData.type,
-        postalcode: propertyData.postalcode,
-        numberofcars: propertyData.numberofcars,
-        country: propertyData.country,
+        estimated_value: propertyData.estimated_value,
+        actual_value: propertyData.actual_value,
+        map: propertyData.map,
       })
     } catch (error) {
-      console.error('Error fetching user data:', error)
+      console.error('Error fetching user data for floor:', error)
     }
   }
 
@@ -70,51 +60,34 @@ const UserProfileModal = (props) => {
   }
 
   const updateUserProfile = () => {
-    setShowAlert(true);
+    setShowAlert(true)
     setShowSpinner(true)
-    const {
-      type,
-      title,
-      totalPrice,
-      address,
-      city,
-      state,
-      numberOfFloors,
-      view,
-      numberofcars,
-      country,
-      postalcode,
-    } = propertyData
-   
+    const { property_title, no_of_floor, size_of_floor, type, estimated_value, actual_value, map } =
+      propertyData
+
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
-        property_type: type,
-        title: title,
-        total_value_of_property: totalPrice,
-        address,
-        address,
-        city: city,
-        state: state,
-        country: country,
-        postal_Code: postalcode,
-        no_of_cars: numberofcars,
-        view: view,
-        no_of_floors: numberOfFloors,
+      .post(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, {
+        property_title: property_title,
+        no_of_floor: no_of_floor,
+        size_of_floor: size_of_floor,
+        type: type,
+        estimated_value: estimated_value,
+        actual_value: actual_value,
+        map: map,
       })
       .then((response) => {
         console.log('response is :', response)
-      
 
         if (response.status === 200) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
-            setMessage("Added data successfully")
+            setMessage('Added data successfully')
           }, 10)
         }
       })
       .catch((error) => {
-        console.error('Error updating user profile:', error)
+        console.error('Error updating user profile for floor:', error)
         setMessage(error.response.data.message)
         setShowSpinner(false)
       })
@@ -140,111 +113,75 @@ const UserProfileModal = (props) => {
           <Modal.Body>
             <Form>
               <Form.Group className="" controlId="exampleForm.ControlInput1">
-                <Form.Label>Property Type</Form.Label>
+                <Form.Label>Property Title</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Property type"
+                  placeholder="Property title"
+                  autoFocus
+                  name="property_title"
+                  value={propertyData.property_title}
+                  onChange={handleInputChange}
+                />
+                <Form.Label>Number of Floors</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Number of Floors"
+                  autoFocus
+                  name="no_of_floor"
+                  value={propertyData.no_of_floor}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="" controlId="exampleForm.ControlInput1">
+                <Form.Label>size of floor</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="size of floor"
+                  autoFocus
+                  name="size_of_floor"
+                  value={propertyData.size_of_floor}
+                  onChange={handleInputChange}
+                />
+              </Form.Group>
+              <Form.Group className="" controlId="exampleForm.ControlInput2">
+                <Form.Label>Type</Form.Label>
+                <Form.Control
+                  type="address"
+                  placeholder="type"
                   autoFocus
                   name="type"
                   value={propertyData.type}
                   onChange={handleInputChange}
                 />
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Title"
-                  autoFocus
-                  name="title"
-                  value={propertyData.title}
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group className="" controlId="exampleForm.ControlInput1">
-                <Form.Label>Total Value</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="TotalPrice"
-                  autoFocus
-                  name="totalPrice"
-                  value={propertyData.value}
-                  onChange={handleInputChange}
-                />
               </Form.Group>
               <Form.Group className="" controlId="exampleForm.ControlInput2">
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                  type="address"
-                  placeholder="Address"
-                  autoFocus
-                  name="address"
-                  value={propertyData.address}
-                  onChange={handleInputChange}
-                />
-              </Form.Group>
-              <Form.Group className="" controlId="exampleForm.ControlInput2">
-                <Form.Label>City</Form.Label>
+                <Form.Label>Estimated value</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="City"
+                  placeholder="Estimated Value"
                   autoFocus
-                  name="city"
-                  value={propertyData.city}
+                  name="estimated_value"
+                  value={propertyData.estimated_value}
                   onChange={handleInputChange}
                 />
               </Form.Group>
 
-              <Form.Label>State</Form.Label>
+              <Form.Label>Actual value</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="state"
+                placeholder="Actual value"
                 autoFocus
-                name="state"
-                value={propertyData.state}
+                name="actual_value"
+                value={propertyData.actual_value}
                 onChange={handleInputChange}
               />
-              <Form.Label>Number of floors</Form.Label>
+              <Form.Label>Map</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Number of Floors"
+                placeholder="map"
                 autoFocus
-                name="numberOfFloors"
-                value={propertyData.numberOfFloors}
-                onChange={handleInputChange}
-              />
-              <Form.Label>view</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="view"
-                autoFocus
-                name="view"
-                value={propertyData.view}
-                onChange={handleInputChange}
-              />
-              <Form.Label>Number of Cars</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="number of cars"
-                autoFocus
-                name="numberofcars"
-                value={propertyData.numberofcars}
-                onChange={handleInputChange}
-              />
-              <Form.Label>Country</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Country"
-                autoFocus
-                name="country"
-                value={propertyData.country}
-                onChange={handleInputChange}
-              />
-              <Form.Label>postal code</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="postal code"
-                autoFocus
-                name="postalcode"
-                value={propertyData.postalcode}
+                name="map"
+                value={propertyData.map}
                 onChange={handleInputChange}
               />
             </Form>

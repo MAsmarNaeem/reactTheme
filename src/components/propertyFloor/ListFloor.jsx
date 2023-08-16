@@ -2,18 +2,19 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
-import Modal from '../../components/model/Modal'
+import { Navigate, useNavigate } from 'react-router-dom'
+import Modal from './ListFloorModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
   const get_users_list = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}v1/admin/properties`).then((response) => {
+    axios.get(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`).then((response) => {
       //   console.log("response : ",response);
       //console.log("response:", response.data.users);
       // setPageCount(Math.ceil(response.data.total / rowsPerPage));
       setUsersList(response.data.data)
     })
   }
-
+const navigate=useNavigate()
   useEffect(() => {
     // eslint-disable-next-line
     //  GetProducts(currentPage);
@@ -29,7 +30,7 @@ const PropertyList = () => {
         <div className="col">
           <div className="card">
             <div className="card-header d-flex">
-              <div>Property List</div>
+              <div>Property Floor</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
                   <Modal />
@@ -42,27 +43,29 @@ const PropertyList = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Title</th>
-                    <th>Total Value</th>
-                    <th>address</th>
-                    <th>city</th>
-                    <th>State</th>
-                    <th>Number of cars</th>
-                    <th>country</th>
+                    <th>Number of Floors</th>
+                    <th>size of Floors</th>
+                    <th>Type</th>
+                    <th>Estimated value</th>
+                    <th>Actual value</th>
+                    <th>Map</th>
+
+
+                    
                   </tr>
                 </thead>
                 <tbody>
                   {usersList.map((user, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{user.title}</td>
-                      <td>{user.total_value_of_property}</td>
-                      <td>{user.address}</td>
-                      <td>{user.city}</td>
-                      <td>{user.state}</td>
+                      <td>{user.no_of_floor}</td>
+                      <td>{user.size_of_floor}</td>
+                      <td>{user.type}</td>
+                      <td>{user.estimated_value}</td>
+                      <td>{user.actual_value}</td>
 
-                      <td>{user.no_of_cars}</td>
-                      <td>{user.country}</td>
+                      <td>{user.map}</td>
+                     
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}

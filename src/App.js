@@ -17,6 +17,9 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const List = React.lazy(() => import('./views/pages/property/PropertyList'))
+const Types = React.lazy(() => import('./views/pages/types/Types'))
+const Floor = React.lazy(() => import('./views/pages/floor/Floor'))
+
 
 class App extends Component {
   render() {
@@ -27,6 +30,8 @@ class App extends Component {
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/list" name="Property list" element={<List />} />
+            <Route exact path="/type" name="List type" element={<Types/>} />
+            <Route exact path="/floor" name="floor" element={<Floor/>} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />

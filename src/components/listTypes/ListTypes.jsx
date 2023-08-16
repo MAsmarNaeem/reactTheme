@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
-import Modal from '../../components/model/Modal'
+import Modal from '../../components/listTypeModel/ListTypeModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
   const get_users_list = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}v1/admin/properties`).then((response) => {
+    axios.get(`${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=15&page=1`).then((response) => {
       //   console.log("response : ",response);
       //console.log("response:", response.data.users);
       // setPageCount(Math.ceil(response.data.total / rowsPerPage));
@@ -29,8 +29,8 @@ const PropertyList = () => {
         <div className="col">
           <div className="card">
             <div className="card-header d-flex">
-              <div>Property List</div>
-              <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
+              <div>Property List Types</div>
+              <div className="d-flex text-center " style={{ paddingLeft: '800px' }}>
                 <CButton color="dark">
                   <Modal />
                 </CButton>
@@ -43,12 +43,10 @@ const PropertyList = () => {
                   <tr>
                     <th>ID</th>
                     <th>Title</th>
-                    <th>Total Value</th>
-                    <th>address</th>
-                    <th>city</th>
-                    <th>State</th>
-                    <th>Number of cars</th>
-                    <th>country</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                   
                   </tr>
                 </thead>
                 <tbody>
@@ -56,13 +54,11 @@ const PropertyList = () => {
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{user.title}</td>
-                      <td>{user.total_value_of_property}</td>
-                      <td>{user.address}</td>
-                      <td>{user.city}</td>
-                      <td>{user.state}</td>
+                      <td>{user.description}</td>
+                      <td>{user.created_at}</td>
+                      <td>{user.updated_at}</td>
 
-                      <td>{user.no_of_cars}</td>
-                      <td>{user.country}</td>
+                
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}

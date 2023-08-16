@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { AppSidebar, AppFooter, AppHeader } from '../../../components/index'
-import List from '../../../components/propertyFloor/ListFloor'
+import List from '../../../components/listTypes/ListTypes'
 
 
 

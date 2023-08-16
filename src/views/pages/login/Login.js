@@ -31,7 +31,7 @@ const Login = () => {
 
   const getdata = (e) => {
     const { value, name } = e.target
-    console.log('getting value is :', value)
+   // console.log('getting value is :', value)
 
     setlogindata((prevState) => ({
       ...prevState,
@@ -51,7 +51,9 @@ const Login = () => {
       .then((response) => {
         // localStorage.setItem('token', response.user.token)
         navigate('/dashboard')
-        console.log('response is :', response)
+        //console.log('response is :', response.data.user.token)
+
+        localStorage.setItem('token', response.data.user.token)
       })
 
       .catch((error) => {

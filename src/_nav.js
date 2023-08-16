@@ -278,6 +278,16 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'List type',
+        to: '/type',
+      },
+      {
+        component: CNavItem,
+        name: 'Floor',
+        to: '/floor',
+      },
+      {
+        component: CNavItem,
         name: 'Error 404',
         to: '/404',
       },
