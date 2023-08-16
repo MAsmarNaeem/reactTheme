@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
-import { Navigate, useNavigate } from 'react-router-dom'
+
 import Modal from './ListFloorModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
@@ -14,7 +14,7 @@ const PropertyList = () => {
       setUsersList(response.data.data)
     })
   }
-const navigate=useNavigate()
+
   useEffect(() => {
     // eslint-disable-next-line
     //  GetProducts(currentPage);
