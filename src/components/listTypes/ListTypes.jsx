@@ -5,13 +5,23 @@ import { CButton } from '@coreui/react'
 import Modal from '../../components/listTypeModel/ListTypeModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
+  const token=localStorage.getItem('token')
   const get_users_list = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=15&page=1`).then((response) => {
-      //   console.log("response : ",response);
-      //console.log("response:", response.data.users);
-      // setPageCount(Math.ceil(response.data.total / rowsPerPage));
-      setUsersList(response.data.data)
-    })
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    axios
+      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=15&page=1`, config)
+      .then((response) => {
+        setUsersList(response.data.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching user list:', error)
+      })
   }
 
   useEffect(() => {
@@ -46,7 +56,6 @@ const PropertyList = () => {
                     <th>Description</th>
                     <th>Created At</th>
                     <th>Updated At</th>
-                   
                   </tr>
                 </thead>
                 <tbody>
@@ -57,8 +66,6 @@ const PropertyList = () => {
                       <td>{user.description}</td>
                       <td>{user.created_at}</td>
                       <td>{user.updated_at}</td>
-
-                
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}

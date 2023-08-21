@@ -271,6 +271,12 @@ const _nav = [
         name: 'Register',
         to: '/register',
       },
+  
+      {
+        component: CNavItem,
+        name: 'Sub type',
+        to: '/ListType',
+      },
       {
         component: CNavItem,
         name: 'Property List',

@@ -85,7 +85,13 @@ const UserProfileModal = (props) => {
       country,
       postalcode,
     } = propertyData
-   
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  
     axios
       .post(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
         property_type: type,
@@ -100,7 +106,7 @@ const UserProfileModal = (props) => {
         no_of_cars: numberofcars,
         view: view,
         no_of_floors: numberOfFloors,
-      })
+      },config)
       .then((response) => {
         console.log('response is :', response)
       

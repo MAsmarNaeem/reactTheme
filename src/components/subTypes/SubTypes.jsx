@@ -2,12 +2,12 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
-
-import ListFloorModel from './ListFloorModel'
+import Modal from './subTypesModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
-  const token = localStorage.getItem('token')
   const get_users_list = () => {
+    const token = localStorage.getItem('token')
+
     const config = {
       headers: {
         Accept: 'application/json',
@@ -16,7 +16,7 @@ const PropertyList = () => {
     }
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, config)
+      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype`, config)
       .then((response) => {
         setUsersList(response.data.data)
       })
@@ -26,12 +26,7 @@ const PropertyList = () => {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line
-    //  GetProducts(currentPage);
-    // eslint-disable-next-line
-
     get_users_list()
-    // eslint-disable-next-line
   }, [])
   console.log('users List :', usersList)
   return (
@@ -40,10 +35,10 @@ const PropertyList = () => {
         <div className="col">
           <div className="card">
             <div className="card-header d-flex">
-              <div>Property Floor</div>
+              <div>Property List</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
-                  <ListFloorModel />
+                  <Modal />
                 </CButton>
               </div>
             </div>
@@ -53,25 +48,18 @@ const PropertyList = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Number of Floors</th>
-                    <th>size of Floors</th>
+                    <th>Title</th>
+                    <th>Description</th>
                     <th>Type</th>
-                    <th>Estimated value</th>
-                    <th>Actual value</th>
-                    <th>Map</th>
                   </tr>
                 </thead>
                 <tbody>
                   {usersList.map((user, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{user.no_of_floor}</td>
-                      <td>{user.size_of_floor}</td>
-                      <td>{user.type}</td>
-                      <td>{user.estimated_value}</td>
-                      <td>{user.actual_value}</td>
-
-                      <td>{user.map}</td>
+                      <td>{user.title}</td>
+                      <td>{user.description}</td>
+                      <td>{user.type.title}</td>
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}

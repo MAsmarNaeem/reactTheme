@@ -19,6 +19,8 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const List = React.lazy(() => import('./views/pages/property/PropertyList'))
 const Types = React.lazy(() => import('./views/pages/types/Types'))
 const Floor = React.lazy(() => import('./views/pages/floor/Floor'))
+const ListType = React.lazy(() => import('./views/pages/sub_Type/SubType'))
+
 
 
 class App extends Component {
@@ -28,6 +30,7 @@ class App extends Component {
         <Suspense fallback={loading}>
           <Routes>
             <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route exact path="/ListType" name="Sub Type" element={<ListType/>} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/list" name="Property list" element={<List />} />
             <Route exact path="/type" name="List type" element={<Types/>} />

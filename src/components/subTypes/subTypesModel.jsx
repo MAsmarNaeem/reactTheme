@@ -9,8 +9,9 @@ const UserProfileModal = (props) => {
   const [showAlert, setShowAlert] = useState(false)
   const [message, setMessage] = useState('')
   const [propertyData, setPropertyData] = useState({
-    description: '',
+    id: '',
     title: '',
+    description: '',
   })
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
@@ -32,6 +33,7 @@ const UserProfileModal = (props) => {
   const getUserData = async () => {
     try {
       setPropertyData({
+        id: propertyData.id,
         title: propertyData.title,
         description: propertyData.description,
       })
@@ -52,28 +54,32 @@ const UserProfileModal = (props) => {
   const updateUserProfile = () => {
     setShowAlert(true)
     setShowSpinner(true)
-    const { description, title } = propertyData
+    const { id, description, title } = propertyData
     const config = {
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    };
+    }
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/admin/property-type`, {
-        description: description,
-        title: title,
+      .post(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-subtype`,
 
-      },config)
+        {
+          property_type_id: id,
+          description: description,
+          title: title,
+        },
+        config,
+      )
       .then((response) => {
         console.log('response is :', response)
-
-        if (response.status === 200) {
+        if (response.status === 201) {
           setTimeout(() => {
-            setShowSpinner(true)
+            setShowSpinner(false)
             setShowAlert(true)
-            setMessage('Added data successfully')
+            setMessage(response.data.message)
           }, 10)
         }
       })
@@ -104,7 +110,16 @@ const UserProfileModal = (props) => {
           <Modal.Body>
             <Form>
               <Form.Group className="" controlId="exampleForm.ControlInput1">
-                <Form.Label>Property Type</Form.Label>
+                <Form.Label>id</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="id"
+                  autoFocus
+                  name="id"
+                  value={propertyData.id}
+                  onChange={handleInputChange}
+                />
+                <Form.Label>Description</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="description"

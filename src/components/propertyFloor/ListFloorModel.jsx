@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const UserProfileModal = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [optionsData, setOptionsData] = useState([])
   const [message, setMessage] = useState('')
-  const token=localStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const [propertyData, setPropertyData] = useState({
     property_title: '',
     no_of_floor: '',
@@ -18,21 +19,42 @@ const UserProfileModal = (props) => {
     actual_value: '',
     map: '',
   })
-  console.log('modal state is :', propertyData)
-  const navigate=useNavigate()
+
+  const navigate = useNavigate()
   const [showSpinner, setShowSpinner] = useState(false)
+  useEffect(() => {
+    fetchOptionsData()
+  }, [])
+
+  const fetchOptionsData = async () => {
+    try {
+      const config = {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=5&page=2`,
+        config,
+      )
+
+      setOptionsData(response.data.data)
+    } catch (error) {
+      console.error('Error fetching options data:', error)
+    }
+  }
 
   const handleClose = () => setShow(false)
   const handleShow = () => {
-    if(!token)
-    {
-        navigate('/login')
+    if (!token) {
+      navigate('/login')
     }
     getUserData()
     setShowAlert(false)
     setShow(true)
   }
-  console.log('user data is is :', propertyData)
 
   const getUserData = async () => {
     try {
@@ -49,7 +71,7 @@ const UserProfileModal = (props) => {
       console.error('Error fetching user data for floor:', error)
     }
   }
-
+      console.log("property Data :",propertyData);
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
@@ -65,19 +87,26 @@ const UserProfileModal = (props) => {
     const { property_title, no_of_floor, size_of_floor, type, estimated_value, actual_value, map } =
       propertyData
 
-    axios
-      .post(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, {
-        property_title: property_title,
-        no_of_floor: no_of_floor,
-        size_of_floor: size_of_floor,
-        type: type,
-        estimated_value: estimated_value,
-        actual_value: actual_value,
-        map: map,
-      })
-      .then((response) => {
-        console.log('response is :', response)
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
 
+    const requestBody = {
+      property_title: property_title,
+      no_of_floor: no_of_floor,
+      size_of_floor: size_of_floor,
+      type: type,
+      estimated_value: estimated_value,
+      actual_value: actual_value,
+      map: map,
+    }
+
+    axios
+      .post(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, requestBody, config)
+      .then((response) => {
         if (response.status === 200) {
           setTimeout(() => {
             setShowSpinner(false)
@@ -145,14 +174,32 @@ const UserProfileModal = (props) => {
               </Form.Group>
               <Form.Group className="" controlId="exampleForm.ControlInput2">
                 <Form.Label>Type</Form.Label>
-                <Form.Control
+                {/* <Form.Control
                   type="address"
                   placeholder="type"
                   autoFocus
                   name="type"
                   value={propertyData.type}
                   onChange={handleInputChange}
-                />
+                /> */}
+                <select
+                  className="form-select"
+                  aria-label="Select a type"
+                  name="type"
+                  value={propertyData.type}
+                  onChange={handleInputChange}
+                >
+                  <option value="" disabled>
+                    Select a type
+                  </option>
+
+                  {optionsData.map((option) => (
+                    <option key={option.id} value={option.id}>
+                    
+                      {option.title} 
+                    </option>
+                  ))}
+                </select>
               </Form.Group>
               <Form.Group className="" controlId="exampleForm.ControlInput2">
                 <Form.Label>Estimated value</Form.Label>
