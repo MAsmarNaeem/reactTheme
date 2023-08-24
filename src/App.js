@@ -21,8 +21,6 @@ const Types = React.lazy(() => import('./views/pages/types/Types'))
 const Floor = React.lazy(() => import('./views/pages/floor/Floor'))
 const ListType = React.lazy(() => import('./views/pages/sub_Type/SubType'))
 
-
-
 class App extends Component {
   render() {
     return (
@@ -30,11 +28,11 @@ class App extends Component {
         <Suspense fallback={loading}>
           <Routes>
             <Route exact path="/login" name="Login Page" element={<Login />} />
-            <Route exact path="/ListType" name="Sub Type" element={<ListType/>} />
+            <Route exact path="/ListType" name="Sub Type" element={<ListType />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/list" name="Property List" element={<List />} />
-            <Route exact path="/type" name="List type" element={<Types/>} />
-            <Route exact path="/floor" name="floor" element={<Floor/>} />
+            <Route exact path="/type" name="List type" element={<Types />} />
+            <Route exact path="/floor" name="floor" element={<Floor />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />

@@ -13,7 +13,7 @@ const UserProfileModal = (props) => {
     description: '',
     title: '',
   })
- 
+
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
 
@@ -50,7 +50,11 @@ const UserProfileModal = (props) => {
   }
 
   const updateUserProfile = () => {
-   // const { email, firstName, lastName, age, gender } = userData;
+    // const { email, firstName, lastName, age, gender } = userData;
+    if (props.id) {
+      return UserProfile()
+    }
+
     setShowAlert(true)
     setShowSpinner(true)
     const { description, title } = propertyData
@@ -85,31 +89,43 @@ const UserProfileModal = (props) => {
         setShowSpinner(false)
       })
   }
-  // const updateUserProfile = () => {
-  //   //setShowAlert(true);
-  //   setShowSpinner(true);
-   
-  //   axios
-  //     .put(`${process.env.REACT_APP_API_URL}/users/${props.id}`, {
-  //       email: email,
-  //       firstName: firstName,
-  //       lastName: lastName,
-  //       age: age,
-  //       gender: gender,
-  //     })
-  //     .then((response) => {           
-  //       if (response.status === 200) {
-  //         setTimeout(() => {
-  //           setShowSpinner(false);
-  //           setShowAlert(true)
-  //         }, 300);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error updating user profile:", error);
-  //       setShowSpinner(false);
-  //     });
-  // };
+  const UserProfile = () => {
+    setShowAlert(true)
+    setShowSpinner(true)
+
+    const { description, title } = propertyData
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type/${props.id}`,
+        {
+          description: description,
+          title: title,
+        },
+        config,
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            setShowSpinner(false)
+            setShowAlert(true)
+            setMessage('Updated data successfully')
+          }, 10)
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating property:', error)
+        setMessage(error.response.data.message)
+        setShowSpinner(false)
+      })
+  }
+
   return (
     <div>
       <>

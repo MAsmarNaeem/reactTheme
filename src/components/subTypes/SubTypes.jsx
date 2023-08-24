@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
 import Modal from './subTypesModel'
 import PaginationComponent from '../pagination/pagination'
+import { AiOutlineEdit } from 'react-icons/ai'
+import PropTypes from 'prop-types'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
   const [currentPage, setCurrentPage] = useState(1); 
@@ -46,7 +48,7 @@ const PropertyList = () => {
               <div>Property List</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
-                  <Modal />
+                  <Modal name="Add"/>
                 </CButton>
               </div>
             </div>
@@ -59,6 +61,7 @@ const PropertyList = () => {
                     <th>Title</th>
                     <th>Description</th>
                     <th>Type</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -70,13 +73,13 @@ const PropertyList = () => {
                       <td>{user.type.title}</td>
 
                       <td className="d-flex">
-                        {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}
-                        {/* <div variant="none" onClick={() => deleteUser(user.id)}> */}
-
-                        {/* <AiFillDelete className="text-danger ms-3"  show="false" style={{cursor:"pointer"}}/>
-                    
-                  </div> */}
-                      </td>
+                        <Modal
+                          id={user.id}
+                          name={<AiOutlineEdit />}
+                          className="ms-2"
+                          show={false}
+                        />
+                        </td>
                     </tr>
                   ))}
                 </tbody>
@@ -92,6 +95,10 @@ const PropertyList = () => {
       </div>
     </div>
   )
+}
+PropertyList.propTypes = {
+  name: PropTypes.string.isRequired,
+  //id: PropTypes.number.isRequired,
 }
 
 export default PropertyList

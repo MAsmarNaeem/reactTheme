@@ -3,8 +3,9 @@ import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-const UserProfileModal = (props) => {
+const ListFloorModel = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [optionsData, setOptionsData] = useState([])
@@ -80,8 +81,12 @@ const UserProfileModal = (props) => {
       [name]: value,
     }))
   }
-
+console.log("props.id is :",props.id);
   const updateUserProfile = () => {
+    if(props.id)
+    {
+      return UserProfile()
+    }
     setShowAlert(true)
     setShowSpinner(true)
     const { property_title, no_of_floor, size_of_floor, type, estimated_value, actual_value, map } =
@@ -122,12 +127,53 @@ const UserProfileModal = (props) => {
         setShowSpinner(false)
       })
   }
+  const UserProfile = () => {
+    setShowAlert(true)
+    setShowSpinner(true)
 
+    const { property_title, no_of_floor, size_of_floor, type, estimated_value, actual_value, map } =
+      propertyData
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-floor/${props.id}`,
+        {
+          property_title: property_title,
+          no_of_floor: no_of_floor,
+          size_of_floor: size_of_floor,
+          type: type,
+          estimated_value: estimated_value,
+          actual_value: actual_value,
+          map: map,
+        },
+        config,
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            setShowSpinner(false)
+            setShowAlert(true)
+            setMessage('Updated data successfully')
+          }, 10)
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating property:', error)
+        setMessage(error.response.data.message)
+        setShowSpinner(false)
+      })
+  }
   return (
     <div>
       <>
         <Dropdown.Item className="cursor" onClick={handleShow}>
-          Add
+          {props.name}
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -257,5 +303,8 @@ const UserProfileModal = (props) => {
     </div>
   )
 }
-
-export default UserProfileModal
+ListFloorModel.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+}
+export default ListFloorModel

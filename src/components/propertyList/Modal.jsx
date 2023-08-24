@@ -3,6 +3,7 @@ import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const PropertyListModal = (props) => {
   const [show, setShow] = useState(false)
@@ -21,7 +22,7 @@ const PropertyListModal = (props) => {
     country: '',
     postalcode: '',
   })
-
+  console.log('props is :', props.id)
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
@@ -68,6 +69,10 @@ const PropertyListModal = (props) => {
   }
 
   const updateUserProfile = () => {
+    if(props.id)
+    {
+      return UserProfile()
+    }
     setShowAlert(true)
     setShowSpinner(true)
     const {
@@ -126,12 +131,69 @@ const PropertyListModal = (props) => {
         setMessage(error.response.data.message)
       })
   }
+  const UserProfile = () => {
+    setShowAlert(true)
+    setShowSpinner(true)
 
+    const {
+      type,
+      title,
+      totalPrice,
+      address,
+      city,
+      state,
+      numberOfFloors,
+      view,
+      numberofcars,
+      country,
+      postalcode,
+    } = propertyData
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}v1/admin/properties/${props.id}`,
+        {
+          property_type: type,
+          title: title,
+          total_value_of_property: totalPrice,
+          address,
+          address,
+          city: city,
+          state: state,
+          country: country,
+          postal_Code: postalcode,
+          no_of_cars: numberofcars,
+          view: view,
+          no_of_floors: numberOfFloors,
+        },
+        config,
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            setShowSpinner(false)
+            setShowAlert(true)
+            setMessage('Updated data successfully')
+          }, 10)
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating property:', error)
+        setMessage(error.response.data.message)
+        setShowSpinner(false)
+      })
+  }
   return (
     <div>
       <>
         <Dropdown.Item className="cursor" onClick={handleShow}>
-          Add
+          {props.name}
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -278,6 +340,10 @@ const PropertyListModal = (props) => {
       </>
     </div>
   )
+}
+PropertyListModal.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 }
 
 export default PropertyListModal

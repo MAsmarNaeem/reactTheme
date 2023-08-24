@@ -3,6 +3,7 @@ import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const UserProfileModal = (props) => {
   const [show, setShow] = useState(false)
@@ -15,7 +16,6 @@ const UserProfileModal = (props) => {
   })
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
- 
 
   const [showSpinner, setShowSpinner] = useState(false)
 
@@ -28,7 +28,6 @@ const UserProfileModal = (props) => {
     setShowAlert(false)
     setShow(true)
   }
- 
 
   const getUserData = async () => {
     try {
@@ -52,6 +51,9 @@ const UserProfileModal = (props) => {
   }
 
   const updateUserProfile = () => {
+    if (props.id) {
+      return UserProfile()
+    }
     setShowAlert(true)
     setShowSpinner(true)
     const { id, description, title } = propertyData
@@ -74,7 +76,6 @@ const UserProfileModal = (props) => {
         config,
       )
       .then((response) => {
-       
         if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
@@ -89,12 +90,48 @@ const UserProfileModal = (props) => {
         setShowSpinner(false)
       })
   }
+  const UserProfile = () => {
+    setShowAlert(true)
+    setShowSpinner(true)
 
+    const { id, description, title } = propertyData
+    const config = {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    axios
+      .patch(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-subtype/${props.id}`,
+        {
+          property_type_id: id,
+          description: description,
+          title: title,
+        },
+        config,
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            setShowSpinner(false)
+            setShowAlert(true)
+            setMessage('Updated data successfully')
+          }, 10)
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating property:', error)
+        setMessage(error.response.data.message)
+        setShowSpinner(false)
+      })
+  }
   return (
     <div>
       <>
         <Dropdown.Item className="cursor" onClick={handleShow}>
-          Add
+          {props.name}
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -162,6 +199,10 @@ const UserProfileModal = (props) => {
       </>
     </div>
   )
+}
+UserProfileModal.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 }
 
 export default UserProfileModal

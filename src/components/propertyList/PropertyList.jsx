@@ -3,6 +3,8 @@ import axios from 'axios';
 import { CButton } from '@coreui/react';
 import Modal from './Modal';
 import PaginationComponent from '../pagination/pagination';
+import { AiOutlineEdit } from 'react-icons/ai'
+import PropTypes from 'prop-types'
 
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([]);
@@ -49,7 +51,7 @@ const PropertyList = () => {
               <div>Property List</div>
               <div className="d-flex text-center " style={{ marginLeft: 'auto' }}>
                 <CButton color="dark">
-                  <Modal />
+                  <Modal name="Add"/>
                 </CButton>
               </div>
             </div>
@@ -66,7 +68,7 @@ const PropertyList = () => {
                     <th>City</th>
                     <th>State</th>
                     <th>Country</th>
-                    <th>Description</th>
+                    <th>action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -80,7 +82,15 @@ const PropertyList = () => {
                       <td>{property.city}</td>
                       <td>{property.state}</td>
                       <td>{property.country}</td>
-                      <td>{property.description}</td>
+                     
+                      <td className="d-flex">
+                        <Modal
+                          id={property.id}
+                          name={<AiOutlineEdit />}
+                          className="ms-2"
+                          show={false}
+                        />
+                        </td>
                     </tr>
                   ))}
                 </tbody>
@@ -97,5 +107,8 @@ const PropertyList = () => {
     </div>
   );
 };
-
+PropertyList.propTypes = {
+  name: PropTypes.string.isRequired,
+  //id: PropTypes.number.isRequired,
+}
 export default PropertyList;

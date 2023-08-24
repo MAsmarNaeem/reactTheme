@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
 import PaginationComponent from '../pagination/pagination'
+import { AiOutlineEdit } from 'react-icons/ai'
 
 import ListFloorModel from './ListFloorModel'
 const PropertyList = () => {
@@ -54,7 +55,7 @@ const PropertyList = () => {
               <div>Property Floor</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
-                  <ListFloorModel />
+                  <ListFloorModel name="Add"/>
                 </CButton>
               </div>
             </div>
@@ -70,6 +71,7 @@ const PropertyList = () => {
                     <th>Estimated value</th>
                     <th>Actual value</th>
                     <th>Map</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,6 +85,14 @@ const PropertyList = () => {
                       <td>{user.actual_value}</td>
 
                       <td>{user.map}</td>
+                      <td className="d-flex">
+                        <ListFloorModel
+                          id={user.id}
+                          name={<AiOutlineEdit />}
+                          className="ms-2"
+                          show={false}
+                        />
+                        </td>
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}
