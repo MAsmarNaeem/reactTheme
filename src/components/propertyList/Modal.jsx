@@ -4,10 +4,10 @@ import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
 
-const UserProfileModal = (props) => {
+const PropertyListModal = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
-  const[message,setMessage]=useState("")
+  const [message, setMessage] = useState('')
   const [propertyData, setPropertyData] = useState({
     type: '',
     title: '',
@@ -21,16 +21,15 @@ const UserProfileModal = (props) => {
     country: '',
     postalcode: '',
   })
-  console.log('modal state is :', show)
-  const navigate=useNavigate()
-  const token=localStorage.getItem('token')
+
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
 
   const [showSpinner, setShowSpinner] = useState(false)
 
   const handleClose = () => setShow(false)
   const handleShow = () => {
-    if(!token)
-    {
+    if (!token) {
       navigate('/login')
     }
     getUserData()
@@ -41,7 +40,6 @@ const UserProfileModal = (props) => {
 
   const getUserData = async () => {
     try {
-
       setPropertyData({
         title: propertyData.title,
         totalPrice: propertyData.totalPrice,
@@ -70,7 +68,7 @@ const UserProfileModal = (props) => {
   }
 
   const updateUserProfile = () => {
-    setShowAlert(true);
+    setShowAlert(true)
     setShowSpinner(true)
     const {
       type,
@@ -90,39 +88,42 @@ const UserProfileModal = (props) => {
         Accept: 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    };
-  
+    }
+
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/admin/properties`, {
-        property_type: type,
-        title: title,
-        total_value_of_property: totalPrice,
-        address,
-        address,
-        city: city,
-        state: state,
-        country: country,
-        postal_Code: postalcode,
-        no_of_cars: numberofcars,
-        view: view,
-        no_of_floors: numberOfFloors,
-      },config)
+      .post(
+        `${process.env.REACT_APP_API_URL}v1/admin/properties`,
+        {
+          property_type: type,
+          title: title,
+          total_value_of_property: totalPrice,
+          address,
+          address,
+          city: city,
+          state: state,
+          country: country,
+          postal_Code: postalcode,
+          no_of_cars: numberofcars,
+          view: view,
+          no_of_floors: numberOfFloors,
+        },
+        config,
+      )
       .then((response) => {
         console.log('response is :', response)
-      
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
-            setMessage("Added data successfully")
+            setMessage('Added data successfully')
           }, 10)
         }
       })
       .catch((error) => {
+        setShowSpinner(false)
         console.error('Error updating user profile:', error)
         setMessage(error.response.data.message)
-        setShowSpinner(false)
       })
   }
 
@@ -279,4 +280,4 @@ const UserProfileModal = (props) => {
   )
 }
 
-export default UserProfileModal
+export default PropertyListModal

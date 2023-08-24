@@ -2,11 +2,16 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
-import Modal from '../../components/listTypeModel/ListTypeModel'
+import PaginationComponent from '../pagination/pagination'
+import ListTypeModel from './ListTypeModel'
+
+import { AiOutlineEdit } from 'react-icons/ai'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
-  const token=localStorage.getItem('token')
-  const get_users_list = () => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageCount, setPageCount] = useState('')
+  const token = localStorage.getItem('token')
+  const get_users_list = (page) => {
     const config = {
       headers: {
         Accept: 'application/json',
@@ -15,24 +20,31 @@ const PropertyList = () => {
     }
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=15&page=1`, config)
+      .get(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=15&page=${page}`,
+        config,
+      )
       .then((response) => {
         setUsersList(response.data.data)
+
+        setPageCount(Math.ceil(response.data.meta.total / response.data.meta.per_page))
       })
       .catch((error) => {
         console.error('Error fetching user list:', error)
       })
   }
-
   useEffect(() => {
     // eslint-disable-next-line
     //  GetProducts(currentPage);
     // eslint-disable-next-line
 
-    get_users_list()
+    get_users_list(currentPage)
     // eslint-disable-next-line
-  }, [])
-  console.log('users List :', usersList)
+  }, [currentPage])
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage)
+  }
+
   return (
     <div className="container" style={{ marginTop: '70px' }}>
       <div className="row">
@@ -41,8 +53,8 @@ const PropertyList = () => {
             <div className="card-header d-flex">
               <div>Property List Types</div>
               <div className="d-flex text-center " style={{ paddingLeft: '800px' }}>
-                <CButton color="dark">
-                  <Modal />
+                <CButton>
+                  <ListTypeModel name="Add" />
                 </CButton>
               </div>
             </div>
@@ -56,6 +68,7 @@ const PropertyList = () => {
                     <th>Description</th>
                     <th>Created At</th>
                     <th>Updated At</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,9 +79,14 @@ const PropertyList = () => {
                       <td>{user.description}</td>
                       <td>{user.created_at}</td>
                       <td>{user.updated_at}</td>
-
+                
                       <td className="d-flex">
-                        {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}
+                        <ListTypeModel
+                          id={user.id}
+                          name={<AiOutlineEdit />}
+                          className="ms-2"
+                          show={false}
+                        />
                         {/* <div variant="none" onClick={() => deleteUser(user.id)}> */}
 
                         {/* <AiFillDelete className="text-danger ms-3"  show="false" style={{cursor:"pointer"}}/>
@@ -79,6 +97,11 @@ const PropertyList = () => {
                   ))}
                 </tbody>
               </table>
+              <PaginationComponent
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                pageCount={pageCount}
+              />
             </div>
           </div>
         </div>

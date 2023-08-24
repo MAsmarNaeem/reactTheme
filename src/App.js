@@ -32,7 +32,7 @@ class App extends Component {
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/ListType" name="Sub Type" element={<ListType/>} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
-            <Route exact path="/list" name="Property list" element={<List />} />
+            <Route exact path="/list" name="Property List" element={<List />} />
             <Route exact path="/type" name="List type" element={<Types/>} />
             <Route exact path="/floor" name="floor" element={<Floor/>} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />

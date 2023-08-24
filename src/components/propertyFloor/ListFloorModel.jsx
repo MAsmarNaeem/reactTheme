@@ -71,7 +71,7 @@ const UserProfileModal = (props) => {
       console.error('Error fetching user data for floor:', error)
     }
   }
-      console.log("property Data :",propertyData);
+      
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
@@ -107,7 +107,8 @@ const UserProfileModal = (props) => {
     axios
       .post(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, requestBody, config)
       .then((response) => {
-        if (response.status === 200) {
+       
+        if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)

@@ -2,27 +2,35 @@ import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
+import PaginationComponent from '../pagination/pagination'
 
 import ListFloorModel from './ListFloorModel'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
+  const [currentPage, setCurrentPage] = useState(1); 
+  const[pageCount,setPageCount]=useState("")
   const token = localStorage.getItem('token')
-  const get_users_list = () => {
-    const config = {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+
+  const get_users_list = async (page) => {
+    try {
+      const config = {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-floor?page=${page}`,
+        config,
+      )
+     //  console.log("response is :",response.data.total);
+     setPageCount(Math.ceil(response.data.total /response.data.per_page))
+      setUsersList(response.data.data)
+    } catch (error) {
+      console.error('Error fetching property list:', error)
     }
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, config)
-      .then((response) => {
-        setUsersList(response.data.data)
-      })
-      .catch((error) => {
-        console.error('Error fetching user list:', error)
-      })
   }
 
   useEffect(() => {
@@ -30,10 +38,13 @@ const PropertyList = () => {
     //  GetProducts(currentPage);
     // eslint-disable-next-line
 
-    get_users_list()
+    get_users_list(currentPage)
     // eslint-disable-next-line
-  }, [])
-  console.log('users List :', usersList)
+  }, [currentPage])
+  const handlePageChange = (newPage) => {
+   
+    setCurrentPage(newPage);
+  };
   return (
     <div className="container" style={{ marginTop: '70px' }}>
       <div className="row">
@@ -85,6 +96,11 @@ const PropertyList = () => {
                   ))}
                 </tbody>
               </table>
+              <PaginationComponent
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                pageCount={pageCount}
+              />
             </div>
           </div>
         </div>

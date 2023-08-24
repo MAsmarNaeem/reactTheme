@@ -3,6 +3,7 @@ import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 const UserProfileModal = (props) => {
   const [show, setShow] = useState(false)
@@ -12,9 +13,9 @@ const UserProfileModal = (props) => {
     description: '',
     title: '',
   })
+ 
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
-  console.log('modal state is :', show)
 
   const [showSpinner, setShowSpinner] = useState(false)
 
@@ -27,7 +28,6 @@ const UserProfileModal = (props) => {
     setShowAlert(false)
     setShow(true)
   }
-  console.log('user data is is :', propertyData)
 
   const getUserData = async () => {
     try {
@@ -50,6 +50,7 @@ const UserProfileModal = (props) => {
   }
 
   const updateUserProfile = () => {
+   // const { email, firstName, lastName, age, gender } = userData;
     setShowAlert(true)
     setShowSpinner(true)
     const { description, title } = propertyData
@@ -58,20 +59,21 @@ const UserProfileModal = (props) => {
         Accept: 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    };
+    }
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}v1/admin/property-type`, {
-        description: description,
-        title: title,
-
-      },config)
+      .post(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type`,
+        {
+          description: description,
+          title: title,
+        },
+        config,
+      )
       .then((response) => {
-        console.log('response is :', response)
-
-        if (response.status === 200) {
+        if (response.status === 201) {
           setTimeout(() => {
-            setShowSpinner(true)
+            setShowSpinner(false)
             setShowAlert(true)
             setMessage('Added data successfully')
           }, 10)
@@ -83,12 +85,36 @@ const UserProfileModal = (props) => {
         setShowSpinner(false)
       })
   }
-
+  // const updateUserProfile = () => {
+  //   //setShowAlert(true);
+  //   setShowSpinner(true);
+   
+  //   axios
+  //     .put(`${process.env.REACT_APP_API_URL}/users/${props.id}`, {
+  //       email: email,
+  //       firstName: firstName,
+  //       lastName: lastName,
+  //       age: age,
+  //       gender: gender,
+  //     })
+  //     .then((response) => {           
+  //       if (response.status === 200) {
+  //         setTimeout(() => {
+  //           setShowSpinner(false);
+  //           setShowAlert(true)
+  //         }, 300);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error updating user profile:", error);
+  //       setShowSpinner(false);
+  //     });
+  // };
   return (
     <div>
       <>
         <Dropdown.Item className="cursor" onClick={handleShow}>
-          Add
+          {props.name}
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -147,6 +173,10 @@ const UserProfileModal = (props) => {
       </>
     </div>
   )
+}
+UserProfileModal.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 }
 
 export default UserProfileModal

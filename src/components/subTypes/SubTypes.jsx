@@ -3,9 +3,12 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
 import Modal from './subTypesModel'
+import PaginationComponent from '../pagination/pagination'
 const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
-  const get_users_list = () => {
+  const [currentPage, setCurrentPage] = useState(1); 
+  const[pageCount,setPageCount]=useState("")
+  const get_users_list = (page) => {
     const token = localStorage.getItem('token')
 
     const config = {
@@ -16,9 +19,10 @@ const PropertyList = () => {
     }
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype`, config)
+      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype?page=${1}`, config)
       .then((response) => {
-        setUsersList(response.data.data)
+      setUsersList(response.data.data)
+        setPageCount(Math.ceil(response.data.meta.total /response.data.meta.per_page));
       })
       .catch((error) => {
         console.error('Error fetching user list:', error)
@@ -26,9 +30,13 @@ const PropertyList = () => {
   }
 
   useEffect(() => {
-    get_users_list()
-  }, [])
-  console.log('users List :', usersList)
+    get_users_list(currentPage)
+  }, [currentPage])
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage)
+  }
+ 
   return (
     <div className="container" style={{ marginTop: '70px' }}>
       <div className="row">
@@ -73,6 +81,11 @@ const PropertyList = () => {
                   ))}
                 </tbody>
               </table>
+              <PaginationComponent
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                pageCount={pageCount}
+              />
             </div>
           </div>
         </div>

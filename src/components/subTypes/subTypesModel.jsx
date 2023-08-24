@@ -15,7 +15,7 @@ const UserProfileModal = (props) => {
   })
   const token = localStorage.getItem('token')
   const navigate = useNavigate()
-  console.log('modal state is :', show)
+ 
 
   const [showSpinner, setShowSpinner] = useState(false)
 
@@ -28,7 +28,7 @@ const UserProfileModal = (props) => {
     setShowAlert(false)
     setShow(true)
   }
-  console.log('user data is is :', propertyData)
+ 
 
   const getUserData = async () => {
     try {
@@ -74,7 +74,7 @@ const UserProfileModal = (props) => {
         config,
       )
       .then((response) => {
-        console.log('response is :', response)
+       
         if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
