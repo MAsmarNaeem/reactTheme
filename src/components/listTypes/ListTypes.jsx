@@ -7,13 +7,13 @@ import ListTypeModel from './ListTypeModel'
 
 import { AiOutlineEdit } from 'react-icons/ai'
 const PropertyList = () => {
-  const [usersList, setUsersList] = useState([])
+  const [propertyList, setPropertyList] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [pageCount, setPageCount] = useState('')
-  const[updateList,setUpdateList]=useState('false')
-  console.log("updated List is :",updateList);
+  const [updateList, setUpdateList] = useState('false')
+  console.log('updated List is :', updateList)
   const token = localStorage.getItem('token')
-  const getUsersList = (page) => {
+  const getPropertyList = (page) => {
     const config = {
       headers: {
         Accept: 'application/json',
@@ -27,7 +27,7 @@ const PropertyList = () => {
         config,
       )
       .then((response) => {
-        setUsersList(response.data.data)
+        setPropertyList(response.data.data)
 
         setPageCount(Math.ceil(response.data.meta.total / response.data.meta.per_page))
       })
@@ -40,9 +40,9 @@ const PropertyList = () => {
     //  GetProducts(currentPage);
     // eslint-disable-next-line
 
-    getUsersList(currentPage)
+    getPropertyList(currentPage)
     // eslint-disable-next-line
-  }, [currentPage,updateList])
+  }, [currentPage, updateList])
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
   }
@@ -54,9 +54,9 @@ const PropertyList = () => {
           <div className="card">
             <div className="card-header d-flex">
               <div>Property List Types</div>
-              <div className="d-flex text-center " style={{ paddingLeft: '800px' }}>
-                <CButton>
-                  <ListTypeModel name="Add" setUpdateList={setUpdateList}/>
+              <div className="d-flex text-center " style={{ marginLeft: 'auto' }}>
+                <CButton color="dark">
+                  <ListTypeModel name="Add" setUpdateList={setUpdateList} />
                 </CButton>
               </div>
             </div>
@@ -74,17 +74,17 @@ const PropertyList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {usersList.map((user, index) => (
+                  {propertyList.map((user, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{user.title}</td>
                       <td>{user.description}</td>
                       <td>{user.created_at}</td>
                       <td>{user.updated_at}</td>
-                
+
                       <td className="d-flex">
                         <ListTypeModel
-                        setUpdateList={setUpdateList}
+                          setUpdateList={setUpdateList}
                           id={user.id}
                           name={<AiOutlineEdit />}
                           className="ms-2"

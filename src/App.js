@@ -37,12 +37,27 @@ class App extends Component {
               element={<ProtectedRoute Component={ListType} />}
             />
             <Route exact path="/register" name="Register Page" element={<Register />} />
-            <Route exact path="/list" name="Property List" element={<ProtectedRoute  Component={List} />} />
-            <Route exact path="/type" name="List type" element={<ProtectedRoute Component={Types} />} />
-            <Route exact path="/floor" name="floor" element={<ProtectedRoute  Component={Floor}/>} />
+            <Route
+              exact
+              path="/list"
+              name="Property List"
+              element={<ProtectedRoute Component={List} />}
+            />
+            <Route
+              exact
+              path="/type"
+              name="List type"
+              element={<ProtectedRoute Component={Types} />}
+            />
+            <Route
+              exact
+              path="/floor"
+              name="floor"
+              element={<ProtectedRoute Component={Floor} />}
+            />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
-            <Route path="*" name="Home" element={<ProtectedRoute  Component={DefaultLayout}/>} />
+            <Route path="*" name="Home" element={<ProtectedRoute Component={DefaultLayout} />} />
           </Routes>
         </Suspense>
       </HashRouter>

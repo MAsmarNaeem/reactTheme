@@ -13,7 +13,7 @@ const ListFloor = () => {
   const [UpdateTable, setUpdateTable] = useState('false')
   const token = localStorage.getItem('token')
 
-  const getPropertyList = async (page) => {
+  const getFloorList = async (page) => {
     try {
       const config = {
         headers: {
@@ -36,7 +36,7 @@ const ListFloor = () => {
 
   useEffect(() => {
     // eslint-disable-next-line
-    getPropertyList(currentPage)
+    getFloorList(currentPage)
     // eslint-disable-next-line
   }, [currentPage, UpdateTable])
   const handlePageChange = (newPage) => {
@@ -49,7 +49,7 @@ const ListFloor = () => {
           <div className="card">
             <div className="card-header d-flex">
               <div>Property Floor</div>
-              <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
+              <div className="d-flex text-center " style={{ marginLeft: 'auto' }}>
                 <CButton color="dark">
                   <ListFloorModel name="Add" setUpdateTable={setUpdateTable} />
                 </CButton>

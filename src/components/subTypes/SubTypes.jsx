@@ -12,7 +12,7 @@ const PropertySubTypes = () => {
   const [pageCount, setPageCount] = useState('')
   const [updateTable, setUpdateTable] = useState('false')
 
-  const get_users_list = (page) => {
+  const getSubTypelist = (page) => {
     const token = localStorage.getItem('token')
 
     const config = {
@@ -35,7 +35,7 @@ const PropertySubTypes = () => {
   }
 
   useEffect(() => {
-    get_users_list(currentPage)
+    getSubTypelist(currentPage)
   }, [currentPage, updateTable])
 
   const handlePageChange = (newPage) => {
@@ -49,7 +49,8 @@ const PropertySubTypes = () => {
           <div className="card">
             <div className="card-header d-flex">
               <div>Property List</div>
-              <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
+            
+              <div className="d-flex text-center " style={{ marginLeft: 'auto' }}>
                 <CButton color="dark">
                   <Modal name="Add" setUpdateTable={setUpdateTable} />
                 </CButton>
@@ -75,13 +76,13 @@ const PropertySubTypes = () => {
                       <td>{user.description}</td>
                       <td>{user.type.title}</td>
 
-                      <td className="d-flex">
+                      <td className="d-flex" >
                         <Modal
                           id={user.id}
-                          name={<AiOutlineEdit />}
+                          name={<AiOutlineEdit/>}
 
                           setUpdateTable={setUpdateTable}
-                          className="ms-2 border-0"
+                          className="ms-2"
                           show={false}
                         />
                       </td>

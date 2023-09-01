@@ -54,12 +54,12 @@ const ListFloorModel = (props) => {
     if (!token) {
       navigate('/login')
     }
-    getUserData()
+    getPropertyData()
     setShowAlert(false)
     setShow(true)
   }
 
-  const getUserData = async () => {
+  const getPropertyData = async () => {
     try {
       setPropertyData({
         property_title: propertyData.property_title,
