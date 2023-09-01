@@ -6,13 +6,14 @@ import PaginationComponent from '../pagination/pagination'
 import { AiOutlineEdit } from 'react-icons/ai'
 
 import ListFloorModel from './ListFloorModel'
-const PropertyList = () => {
-  const [usersList, setUsersList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1); 
-  const[pageCount,setPageCount]=useState("")
+const ListFloor = () => {
+  const [propertyList, setPropertyList] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageCount, setPageCount] = useState('')
+  const [UpdateTable, setUpdateTable] = useState('false')
   const token = localStorage.getItem('token')
 
-  const get_users_list = async (page) => {
+  const getPropertyList = async (page) => {
     try {
       const config = {
         headers: {
@@ -25,27 +26,22 @@ const PropertyList = () => {
         `${process.env.REACT_APP_API_URL}v1/admin/property-floor?page=${page}`,
         config,
       )
-     //  console.log("response is :",response.data.total);
-     setPageCount(Math.ceil(response.data.total /response.data.per_page))
-      setUsersList(response.data.data)
+
+      setPageCount(Math.ceil(response.data.total / response.data.per_page))
+      setPropertyList(response.data.data)
     } catch (error) {
       console.error('Error fetching property list:', error)
     }
-
   }
 
   useEffect(() => {
     // eslint-disable-next-line
-    //  GetProducts(currentPage);
+    getPropertyList(currentPage)
     // eslint-disable-next-line
-
-    get_users_list(currentPage)
-    // eslint-disable-next-line
-  }, [currentPage])
+  }, [currentPage, UpdateTable])
   const handlePageChange = (newPage) => {
-   
-    setCurrentPage(newPage);
-  };
+    setCurrentPage(newPage)
+  }
   return (
     <div className="container" style={{ marginTop: '70px' }}>
       <div className="row">
@@ -55,7 +51,7 @@ const PropertyList = () => {
               <div>Property Floor</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
-                  <ListFloorModel name="Add"/>
+                  <ListFloorModel name="Add" setUpdateTable={setUpdateTable} />
                 </CButton>
               </div>
             </div>
@@ -65,6 +61,7 @@ const PropertyList = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
+
                     <th>Number of Floors</th>
                     <th>size of Floors</th>
                     <th>Type</th>
@@ -75,9 +72,10 @@ const PropertyList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {usersList.map((user, index) => (
+                  {propertyList.map((user, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
+
                       <td>{user.no_of_floor}</td>
                       <td>{user.size_of_floor}</td>
                       <td>{user.type}</td>
@@ -89,10 +87,11 @@ const PropertyList = () => {
                         <ListFloorModel
                           id={user.id}
                           name={<AiOutlineEdit />}
+                          setUpdateTable={setUpdateTable}
                           className="ms-2"
                           show={false}
                         />
-                        </td>
+                      </td>
 
                       <td className="d-flex">
                         {/* <UserProfileModal id={user.id} name={<AiOutlineEdit />} className="ms-2" show={false}/> */}
@@ -119,4 +118,4 @@ const PropertyList = () => {
   )
 }
 
-export default PropertyList
+export default ListFloor

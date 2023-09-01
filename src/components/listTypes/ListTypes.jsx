@@ -10,8 +10,10 @@ const PropertyList = () => {
   const [usersList, setUsersList] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [pageCount, setPageCount] = useState('')
+  const[updateList,setUpdateList]=useState('false')
+  console.log("updated List is :",updateList);
   const token = localStorage.getItem('token')
-  const get_users_list = (page) => {
+  const getUsersList = (page) => {
     const config = {
       headers: {
         Accept: 'application/json',
@@ -38,9 +40,9 @@ const PropertyList = () => {
     //  GetProducts(currentPage);
     // eslint-disable-next-line
 
-    get_users_list(currentPage)
+    getUsersList(currentPage)
     // eslint-disable-next-line
-  }, [currentPage])
+  }, [currentPage,updateList])
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
   }
@@ -54,7 +56,7 @@ const PropertyList = () => {
               <div>Property List Types</div>
               <div className="d-flex text-center " style={{ paddingLeft: '800px' }}>
                 <CButton>
-                  <ListTypeModel name="Add" />
+                  <ListTypeModel name="Add" setUpdateList={setUpdateList}/>
                 </CButton>
               </div>
             </div>
@@ -82,6 +84,7 @@ const PropertyList = () => {
                 
                       <td className="d-flex">
                         <ListTypeModel
+                        setUpdateList={setUpdateList}
                           id={user.id}
                           name={<AiOutlineEdit />}
                           className="ms-2"

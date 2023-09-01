@@ -1,10 +1,6 @@
-
-
 import React from 'react'
 import { AppSidebar, AppFooter, AppHeader } from '../../../components/index'
 import List from '../../../components/propertyFloor/ListFloor'
-
-
 
 const PropertyList = () => {
   return (
@@ -13,7 +9,7 @@ const PropertyList = () => {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
         <div className="body flex-grow-1 px-3">
-          <List/>
+          <List />
         </div>
         <AppFooter />
       </div>

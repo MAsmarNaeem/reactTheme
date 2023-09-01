@@ -4,10 +4,12 @@ import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { propTypes } from 'react-bootstrap/esm/Image'
 
 const ListFloorModel = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [open, setOpen] = useState(false)
   const [optionsData, setOptionsData] = useState([])
   const [message, setMessage] = useState('')
   const token = localStorage.getItem('token')
@@ -37,7 +39,7 @@ const ListFloorModel = (props) => {
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=5&page=2`,
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=500&page=1`,
         config,
       )
 
@@ -72,7 +74,7 @@ const ListFloorModel = (props) => {
       console.error('Error fetching user data for floor:', error)
     }
   }
-      
+
   const handleInputChange = (event) => {
     const { name, value } = event.target
 
@@ -81,11 +83,10 @@ const ListFloorModel = (props) => {
       [name]: value,
     }))
   }
-console.log("props.id is :",props.id);
-  const updateUserProfile = () => {
-    if(props.id)
-    {
-      return UserProfile()
+ 
+  const addProperty = () => {
+    if (props.id) {
+      return updateProperty()
     }
     setShowAlert(true)
     setShowSpinner(true)
@@ -112,11 +113,11 @@ console.log("props.id is :",props.id);
     axios
       .post(`${process.env.REACT_APP_API_URL}v1/admin/property-floor`, requestBody, config)
       .then((response) => {
-       
         if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
+            props.setUpdateTable('true')
             setMessage('Added data successfully')
           }, 10)
         }
@@ -126,8 +127,12 @@ console.log("props.id is :",props.id);
         setMessage(error.response.data.message)
         setShowSpinner(false)
       })
+      .finally()
+    {
+      props.setUpdateTable('false')
+    }
   }
-  const UserProfile = () => {
+  const updateProperty = () => {
     setShowAlert(true)
     setShowSpinner(true)
 
@@ -155,11 +160,13 @@ console.log("props.id is :",props.id);
         config,
       )
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status===201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
+            props.setUpdateTable(true)
             setMessage('Updated data successfully')
+          
           }, 10)
         }
       })
@@ -167,7 +174,10 @@ console.log("props.id is :",props.id);
         console.error('Error updating property:', error)
         setMessage(error.response.data.message)
         setShowSpinner(false)
-      })
+      }).finally()
+      {
+        props.setUpdateTable(false)
+      }
   }
   return (
     <div>
@@ -175,7 +185,7 @@ console.log("props.id is :",props.id);
         <Dropdown.Item className="cursor" onClick={handleShow}>
           {props.name}
         </Dropdown.Item>
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} open={open} onClose={() => setOpen(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Add Property</Modal.Title>
           </Modal.Header>
@@ -242,8 +252,7 @@ console.log("props.id is :",props.id);
 
                   {optionsData.map((option) => (
                     <option key={option.id} value={option.id}>
-                    
-                      {option.title} 
+                      {option.title}
                     </option>
                   ))}
                 </select>
@@ -284,7 +293,7 @@ console.log("props.id is :",props.id);
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={updateUserProfile}>
+            <Button variant="primary" onClick={addProperty}>
               Save
               {showSpinner ? (
                 <Spinner
@@ -306,5 +315,6 @@ console.log("props.id is :",props.id);
 ListFloorModel.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  setUpdateTable: PropTypes.string.isRequired,
 }
 export default ListFloorModel

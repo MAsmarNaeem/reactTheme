@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -9,6 +9,7 @@ const PropertyListModal = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [message, setMessage] = useState('')
+  const [optionsData, setOptionsData] = useState([])
   const [propertyData, setPropertyData] = useState({
     type: '',
     title: '',
@@ -22,7 +23,8 @@ const PropertyListModal = (props) => {
     country: '',
     postalcode: '',
   })
-  console.log('props is :', props.id)
+  console.log('property Data for propertyLIst is :', propertyData.type)
+
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
@@ -37,7 +39,6 @@ const PropertyListModal = (props) => {
     setShowAlert(false)
     setShow(true)
   }
-  console.log('user data is is :', propertyData)
 
   const getUserData = async () => {
     try {
@@ -49,7 +50,7 @@ const PropertyListModal = (props) => {
         state: propertyData.state,
         numberOfFloors: propertyData.numberOfFloors,
         view: propertyData.view,
-        type: propertyData.type,
+        property_type: propertyData.type,
         postalcode: propertyData.postalcode,
         numberofcars: propertyData.numberofcars,
         country: propertyData.country,
@@ -68,10 +69,9 @@ const PropertyListModal = (props) => {
     }))
   }
 
-  const updateUserProfile = () => {
-    if(props.id)
-    {
-      return UserProfile()
+  const addPropertyList = () => {
+    if (props.id) {
+      return updateList()
     }
     setShowAlert(true)
     setShowSpinner(true)
@@ -115,13 +115,12 @@ const PropertyListModal = (props) => {
         config,
       )
       .then((response) => {
-        console.log('response is :', response)
-
         if (response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
             setMessage('Added data successfully')
+            props.setUpdateTable('true')
           }, 10)
         }
       })
@@ -130,8 +129,12 @@ const PropertyListModal = (props) => {
         console.error('Error updating user profile:', error)
         setMessage(error.response.data.message)
       })
+      .finally()
+    {
+      props.setUpdateTable('false')
+    }
   }
-  const UserProfile = () => {
+  const updateList = () => {
     setShowAlert(true)
     setShowSpinner(true)
 
@@ -156,7 +159,7 @@ const PropertyListModal = (props) => {
     }
 
     axios
-      .patch(
+      .put(
         `${process.env.REACT_APP_API_URL}v1/admin/properties/${props.id}`,
         {
           property_type: type,
@@ -179,6 +182,7 @@ const PropertyListModal = (props) => {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
+            props.setUpdateTable('true')
             setMessage('Updated data successfully')
           }, 10)
         }
@@ -188,6 +192,33 @@ const PropertyListModal = (props) => {
         setMessage(error.response.data.message)
         setShowSpinner(false)
       })
+      .finally()
+    {
+      props.setUpdateTable('false')
+    }
+  }
+  useEffect(() => {
+    fetchOptionsData()
+  }, [])
+
+  const fetchOptionsData = async () => {
+    try {
+      const config = {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}v1/admin/property-type?per_page=100&page=1`,
+        config,
+      )
+
+      setOptionsData(response.data.data)
+    } catch (error) {
+      console.error('Error fetching options data:', error)
+    }
   }
   return (
     <div>
@@ -209,15 +240,27 @@ const PropertyListModal = (props) => {
           <Modal.Body>
             <Form>
               <Form.Group className="" controlId="exampleForm.ControlInput1">
-                <Form.Label>Property Type</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Property type"
-                  autoFocus
-                  name="type"
-                  value={propertyData.type}
-                  onChange={handleInputChange}
-                />
+                <Form.Group className="" controlId="exampleForm.ControlInput2">
+                  <Form.Label>Type</Form.Label>
+
+                  <select
+                    className="form-select"
+                    aria-label="Select a type"
+                    name="type"
+                    value={propertyData.type}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select a type
+                    </option>
+
+                    {optionsData.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.title}
+                      </option>
+                    ))}
+                  </select>
+                </Form.Group>
                 <Form.Label>Title</Form.Label>
                 <Form.Control
                   type="text"
@@ -322,7 +365,7 @@ const PropertyListModal = (props) => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={updateUserProfile}>
+            <Button variant="primary" onClick={addPropertyList}>
               Save
               {showSpinner ? (
                 <Spinner
@@ -344,6 +387,7 @@ const PropertyListModal = (props) => {
 PropertyListModal.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  setUpdateTable: PropTypes.func.isRequired,
 }
 
 export default PropertyListModal

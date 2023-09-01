@@ -5,7 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-const UserProfileModal = (props) => {
+const ListPropertyModel = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [message, setMessage] = useState('')
@@ -49,10 +49,10 @@ const UserProfileModal = (props) => {
     }))
   }
 
-  const updateUserProfile = () => {
+  const addProperty = () => {
     // const { email, firstName, lastName, age, gender } = userData;
     if (props.id) {
-      return UserProfile()
+      return updateProperty()
     }
 
     setShowAlert(true)
@@ -79,6 +79,7 @@ const UserProfileModal = (props) => {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
+            props.setUpdateList('true')
             setMessage('Added data successfully')
           }, 10)
         }
@@ -87,9 +88,12 @@ const UserProfileModal = (props) => {
         console.error('Error updating user profile:', error)
         setMessage(error.response.data.message)
         setShowSpinner(false)
-      })
+      }).finally()
+      {
+        props.setUpdateList('false')
+      }
   }
-  const UserProfile = () => {
+  const updateProperty = () => {
     setShowAlert(true)
     setShowSpinner(true)
 
@@ -115,6 +119,7 @@ const UserProfileModal = (props) => {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
+            props.setUpdateList('true')
             setMessage('Updated data successfully')
           }, 10)
         }
@@ -124,6 +129,10 @@ const UserProfileModal = (props) => {
         setMessage(error.response.data.message)
         setShowSpinner(false)
       })
+      .finally()
+    {
+      props.setUpdateList('false')
+    }
   }
 
   return (
@@ -146,7 +155,7 @@ const UserProfileModal = (props) => {
           <Modal.Body>
             <Form>
               <Form.Group className="" controlId="exampleForm.ControlInput1">
-                <Form.Label>Property Type</Form.Label>
+                <Form.Label>Description</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="description"
@@ -171,7 +180,7 @@ const UserProfileModal = (props) => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={updateUserProfile}>
+            <Button variant="primary" onClick={addProperty}>
               Save
               {showSpinner ? (
                 <Spinner
@@ -190,9 +199,10 @@ const UserProfileModal = (props) => {
     </div>
   )
 }
-UserProfileModal.propTypes = {
+ListPropertyModel.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  setUpdateList: PropTypes.string.isRequired,
 }
 
-export default UserProfileModal
+export default ListPropertyModel

@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { CButton } from '@coreui/react'
 import Modal from './subTypesModel'
 import PaginationComponent from '../pagination/pagination'
-import { AiOutlineEdit } from 'react-icons/ai'
-import PropTypes from 'prop-types'
-const PropertyList = () => {
-  const [usersList, setUsersList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1); 
-  const[pageCount,setPageCount]=useState("")
+ import { AiOutlineEdit } from 'react-icons/ai'
+// import PropTypes from 'prop-types'
+const PropertySubTypes = () => {
+  const [subTypeList, setSubTypeList] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageCount, setPageCount] = useState('')
+  const [updateTable, setUpdateTable] = useState('false')
+
   const get_users_list = (page) => {
     const token = localStorage.getItem('token')
 
@@ -21,10 +23,11 @@ const PropertyList = () => {
     }
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype?page=${1}`, config)
+      .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype?page=${page}`, config)
       .then((response) => {
-      setUsersList(response.data.data)
-        setPageCount(Math.ceil(response.data.meta.total /response.data.meta.per_page));
+        console.log(response, 'res')
+        setSubTypeList(response.data.data)
+        setPageCount(Math.ceil(response.data.meta.total / response.data.meta.per_page))
       })
       .catch((error) => {
         console.error('Error fetching user list:', error)
@@ -33,12 +36,12 @@ const PropertyList = () => {
 
   useEffect(() => {
     get_users_list(currentPage)
-  }, [currentPage])
+  }, [currentPage, updateTable])
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
   }
- 
+
   return (
     <div className="container" style={{ marginTop: '70px' }}>
       <div className="row">
@@ -48,7 +51,7 @@ const PropertyList = () => {
               <div>Property List</div>
               <div className="d-flex text-center " style={{ paddingLeft: '850px' }}>
                 <CButton color="dark">
-                  <Modal name="Add"/>
+                  <Modal name="Add" setUpdateTable={setUpdateTable} />
                 </CButton>
               </div>
             </div>
@@ -65,7 +68,7 @@ const PropertyList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {usersList.map((user, index) => (
+                  {subTypeList.map((user, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{user.title}</td>
@@ -76,10 +79,12 @@ const PropertyList = () => {
                         <Modal
                           id={user.id}
                           name={<AiOutlineEdit />}
-                          className="ms-2"
+
+                          setUpdateTable={setUpdateTable}
+                          className="ms-2 border-0"
                           show={false}
                         />
-                        </td>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -96,9 +101,9 @@ const PropertyList = () => {
     </div>
   )
 }
-PropertyList.propTypes = {
-  name: PropTypes.string.isRequired,
-  //id: PropTypes.number.isRequired,
-}
-
-export default PropertyList
+// PropertyList.propTypes = {
+//   name: PropTypes.string.isRequired,
+//   //id: PropTypes.number.isRequired,
+// }
+    
+export default PropertySubTypes
