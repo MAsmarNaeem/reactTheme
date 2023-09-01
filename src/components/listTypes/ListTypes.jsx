@@ -11,7 +11,7 @@ const PropertyList = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageCount, setPageCount] = useState('')
   const [updateList, setUpdateList] = useState('false')
-  console.log('updated List is :', updateList)
+ 
   const token = localStorage.getItem('token')
   const getPropertyList = (page) => {
     const config = {

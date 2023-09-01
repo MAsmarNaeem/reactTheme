@@ -25,7 +25,7 @@ const PropertySubTypes = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}v1/admin/property-subtype?page=${page}`, config)
       .then((response) => {
-        console.log(response, 'res')
+      
         setSubTypeList(response.data.data)
         setPageCount(Math.ceil(response.data.meta.total / response.data.meta.per_page))
       })

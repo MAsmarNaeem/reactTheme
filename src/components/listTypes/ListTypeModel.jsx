@@ -9,6 +9,7 @@ const ListPropertyModel = (props) => {
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [message, setMessage] = useState('')
+  
   const [propertyData, setPropertyData] = useState({
     description: '',
     title: '',
@@ -18,18 +19,18 @@ const ListPropertyModel = (props) => {
   const navigate = useNavigate()
 
   const [showSpinner, setShowSpinner] = useState(false)
-
+ 
   const handleClose = () => setShow(false)
   const handleShow = () => {
     if (!token) {
       navigate('/login')
     }
-    getUserData()
+    getPropertyData()
     setShowAlert(false)
     setShow(true)
   }
 
-  const getUserData = async () => {
+  const getPropertyData = async () => {
     try {
       setPropertyData({
         title: propertyData.title,
@@ -52,8 +53,10 @@ const ListPropertyModel = (props) => {
   const addProperty = () => {
     // const { email, firstName, lastName, age, gender } = userData;
     if (props.id) {
+     
       return updateProperty()
     }
+   // setShowTitle('true')
 
     setShowAlert(true)
     setShowSpinner(true)
@@ -88,12 +91,15 @@ const ListPropertyModel = (props) => {
         console.error('Error updating user profile:', error)
         setMessage(error.response.data.message)
         setShowSpinner(false)
-      }).finally()
-      {
-        props.setUpdateList('false')
-      }
+      })
+      .finally()
+    {
+     // setShowTitle('false')
+      props.setUpdateList('false')
+    }
   }
   const updateProperty = () => {
+    
     setShowAlert(true)
     setShowSpinner(true)
 
@@ -143,7 +149,7 @@ const ListPropertyModel = (props) => {
         </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Property</Modal.Title>
+            <Modal.Title>Property Data</Modal.Title>
           </Modal.Header>
           {showAlert && (
             <>

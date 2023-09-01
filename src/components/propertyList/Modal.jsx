@@ -23,7 +23,7 @@ const PropertyListModal = (props) => {
     country: '',
     postalcode: '',
   })
-  console.log('property Data for propertyLIst is :', propertyData.type)
+ 
 
   const navigate = useNavigate()
   const token = localStorage.getItem('token')

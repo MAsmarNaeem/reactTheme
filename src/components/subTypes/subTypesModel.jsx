@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 // import { propTypes } from 'react-bootstrap/esm/Image'
 
 const UserProfileModal = (props) => {
-
   const [show, setShow] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [message, setMessage] = useState('')
@@ -123,8 +122,7 @@ const UserProfileModal = (props) => {
         config,
       )
       .then((response) => {
-        console.log("response :",response);
-        if (response.status === 200  || response.status===201) {
+        if (response.status === 200 || response.status === 201) {
           setTimeout(() => {
             setShowSpinner(false)
             setShowAlert(true)
@@ -137,10 +135,11 @@ const UserProfileModal = (props) => {
         console.error('Error updating property:', error)
         setMessage(error.response.data.message)
         setShowSpinner(false)
-      }).finally()
-      {
-        props.setUpdateTable(false)
-      }
+      })
+      .finally()
+    {
+      props.setUpdateTable(false)
+    }
   }
   return (
     <div>
@@ -219,7 +218,7 @@ const UserProfileModal = (props) => {
 UserProfileModal.propTypes = {
   name: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
- 
+
   currentPage: PropTypes.number.isRequired,
   setUpdateTable: PropTypes.string.isRequired,
 }
