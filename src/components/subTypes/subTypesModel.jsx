@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Form, Button, Alert, Spinner } from 'react-bootstrap'
 import axios from 'axios'
-// import Dropdown from 'react-bootstrap/Dropdown'
+import Dropdown from 'react-bootstrap/Dropdown'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 // import { propTypes } from 'react-bootstrap/esm/Image'
@@ -86,8 +86,10 @@ const UserProfileModal = (props) => {
             setShowAlert(true)
             props.setUpdateTable('true')
             setMessage(response.data.message)
+          
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating user profile:', error)
@@ -128,8 +130,10 @@ const UserProfileModal = (props) => {
             setShowAlert(true)
             props.setUpdateTable(true)
             setMessage('Updated data successfully')
+          
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating property:', error)
@@ -144,10 +148,10 @@ const UserProfileModal = (props) => {
   return (
     <div>
       <>
-        <button onClick={handleShow}> {props.name}</button>
-        {/* <Dropdown.Item className="cursor" onClick={handleShow}>
+        {/* <button onClick={handleShow}> {props.name}</button> */}
+        <Dropdown.Item className="cursor" onClick={handleShow}>
           {props.name}
-        </Dropdown.Item> */}
+        </Dropdown.Item>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Add Property</Modal.Title>

@@ -86,6 +86,7 @@ const ListPropertyModel = (props) => {
             setMessage('Added data successfully')
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating user profile:', error)
@@ -129,6 +130,7 @@ const ListPropertyModel = (props) => {
             setMessage('Updated data successfully')
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating property:', error)

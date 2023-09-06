@@ -121,6 +121,7 @@ const ListFloorModel = (props) => {
             setMessage('Added data successfully')
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating user profile for floor:', error)
@@ -169,6 +170,7 @@ const ListFloorModel = (props) => {
           
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating property:', error)

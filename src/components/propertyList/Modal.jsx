@@ -123,6 +123,7 @@ const PropertyListModal = (props) => {
             props.setUpdateTable('true')
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         setShowSpinner(false)
@@ -186,6 +187,7 @@ const PropertyListModal = (props) => {
             setMessage('Updated data successfully')
           }, 10)
         }
+        handleClose()
       })
       .catch((error) => {
         console.error('Error updating property:', error)
